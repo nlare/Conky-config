@@ -1,0 +1,148 @@
+conky.config = {
+-- Conky, a system monitor, based on torsmo
+
+-- Any original torsmo code is licensed under the BSD license
+
+-- All code written since the fork of torsmo is licensed under the GPL
+
+-- Please see COPYING for details
+
+-- Copyright (c) 2004, Hannu Saransaari and Lauri Hakkarainen
+-- Copyright (c) 2005-2010 Brenden Matthews, Philip Kovacs, et. al. (see AUTHORS)
+-- All rights reserved.
+
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+	alignment = 'bottom_left',
+	background = false,
+--border_width 1
+	cpu_avg_samples = 2,
+	default_color = 'gray',
+--default_outline_color 
+--default_shade_color white
+	draw_borders = false,
+--draw_graph_borders no
+	draw_outline = false,
+--draw_shades yes 
+	use_xft = true,
+	font = 'Terminus:size=8',
+--xftalpha 0.8
+	gap_x = 2260,
+	gap_y = 30,
+	minimum_width = 400, minimum_height = 200,
+	max_text_width = 300,
+	maximum_width = 340,
+--net_avg_samples 2
+	no_buffers = true,
+	text_buffer_size = 2048,
+	double_buffer = true,
+--out_to_console no
+--out_to_stderr no
+--extra_newline no
+	own_window = true,
+--own_window_transparent yes
+--own_window_argb_visual yes
+	own_window_title = 'proc-stat',
+--own_window_argb_value 150
+	own_window_class = 'Conky',
+	own_window_type = 'override',
+	own_window_hints = 'undecorated, below, sticky, skip_taskbar, skip_pager',
+--stippled_borders 0
+	update_interval = 3.0,
+--uppercase yes
+--use_spacer none
+--show_graph_scale no
+--show_graph_range no
+
+};
+
+conky.text = [[
+#${color #696969}${hr 2}
+${font Terminus:bold:size=14}   SYSTEM STATUS${font Terminus:bold:size=8}
+
+${color #202020}${hr 2}
+--------------------------------------------------
+
+${color #696969} KERNEL: ${color} ${execi 1000 uname -r -o} 
+
+${color #696969} CPU: ${color} ${execi 1000 cat /proc/cpuinfo | grep 'model name' | uniq | awk ' {print $4,$5,$6,$7}' | head -1} ${execi 1000 cat /proc/cpuinfo | grep 'cpu MHz' | uniq | awk ' {print $4}' | awk -F "." '{print $1}' | head -1} MHz 
+ 
+${offset 36} ${color #696969}[${color #FF5300} CORES: ${color}${execi 1000 grep processor /proc/cpuinfo | wc -l}${color #696969} ][ ${color #FF5300} LOAD: ${color}${execi 20 cat /proc/loadavg | awk '{print $1,$2,$3}'}${color #696969} ]
+
+${offset 36} ${cpugraph cpu0 20,54 708090 696969 -l -t } ${cpugraph cpu1 20,54 708090 696969 -l -t } ${cpugraph cpu2 20,54 708090 696969 -l -t } ${cpugraph cpu3 20,54 708090 696969 -t -l}
+${offset 36} ${cpugraph cpu4 20,54 708090 696969 -l -t } ${cpugraph cpu5 20,54 708090 696969 -l -t } ${cpugraph cpu6 20,54 708090 696969 -l -t } ${cpugraph cpu7 20,54 708090 696969 -t -l}
+
+${color #696969} MEM: ${color} ${execi 1000 sudo dmidecode --type 17 | grep "Manufacturer:" | uniq | awk i'{print $2}' | head -1} ${execi 1000 sudo dmidecode --type 17 | grep "Type:" | uniq | awk '{print $2}' | head -1} ${execi 1000 sudo dmidecode --type 17 | grep "Speed:" | uniq | awk '{print $2}' | head -1} MHz
+
+${offset 36}${color #696969} [${color #FF5300} TOTAL: ${color} ${execi 1000 cat /proc/meminfo | grep 'MemTotal' | awk ' {print $2/1000}' | awk -F "." '{print $1} '} Mb ${color #696969}][${color #FF5300} FREE: ${color} ${execi 20 cat /proc/meminfo | grep 'MemFree' | awk ' {print $2/1000}' | awk -F "." '{print $1} '} Mb ${color #696969}]
+
+${color #696969} GPU1: ${color} ${execi 1000 lspci | grep 'VGA' | awk ' {print $5,$7,$9,$10,$11,$12,$13,$14,$15,$16}' | grep Intel}
+${color #696969} GPU2: ${color} ${execi 1000 lspci | grep 'VGA' | awk ' {print $5,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16}' | grep NVIDIA}
+${color #696969} GPU3: ${color} ${execi 1000 lspci | grep 'VGA' | awk ' {print $9,$10,$11,$12,$13,$14,$15,$16}' | grep AMD}
+
+${offset 36}${color #696969} [ ${color #FF5300} LOAD: ${color} ${execi 20 sudo radeontop -d - | sed 3q | sed -n '/gpu/p' | sed -r 's/.*gpu//; s/%,.*//' | sed -n '$p' | sed 's/^[ \t]*//'} % ${color #696969} ][ ${color #FF5300} MEM: ${color} ${execi 20 sudo radeontop -d - | sed 3q | awk '{print $16}' | awk -F "." '{print $1}' | sed -n '$p' | sed 's/^[ \t]*//'} Mb ${color #696969} ] ${color}
+
+${color #696969} NETWORK: ${color}${execi 1000 lspci | grep Ethernet | awk '{print $4,$6,$7,$10,$11}'}
+
+${offset 36}${color #696969} [ ${color #FF5300} DOWN: ${color} ${totaldown bridge0} ${color #696969} ][ ${color #FF5300} UP: ${color} ${totalup bridge0} ${color #696969} ] ${color}
+
+${color #202020}${hr 2}
+--------------------------------------------------
+${color #696969}${voffset 5}NAME${goto 142}PID${goto 191}CPU%${goto 236}MEM%$color${voffset 5}
+${top name 1}${goto 135}${top pid 1}${goto 180}${top cpu 1}${goto 225}${top mem 1}
+${top name 2}${goto 135}${top pid 2}${goto 180}${top cpu 2}${goto 225}${top mem 2}
+${top name 3}${goto 135}${top pid 3}${goto 180}${top cpu 3}${goto 225}${top mem 3}
+${top name 5}${goto 135}${top pid 5}${goto 180}${top cpu 5}${goto 225}${top mem 5}
+${top name 6}${goto 135}${top pid 6}${goto 180}${top cpu 6}${goto 225}${top mem 6}
+${top name 7}${goto 135}${top pid 7}${goto 180}${top cpu 7}${goto 225}${top mem 7}
+${top name 8}${goto 135}${top pid 8}${goto 180}${top cpu 8}${goto 225}${top mem 8}
+${top name 9}${goto 135}${top pid 9}${goto 180}${top cpu 9}${goto 225}${top mem 9}
+${top name 10}${goto 135}${top pid 10}${goto 180}${top cpu 10}${goto 225}${top mem 10}
+${color #202020}
+--------------------------------------------------
+${hr 2}
+
+${color #696969}${voffset 5}ESTABLISHED_CONNECTIONS: $color${tcp_portmon 1 65535 count}
+${color #696969}
+*${offset 54}${color #696969}[${color #FF5300} HOSTNAME: ${color}${tcp_portmon 1 65535 rhost 0}${color #696969} ]$color
+
+${offset 60}${color #696969}[${color #FF5300} REMOTE_IP: ${color}${tcp_portmon 1 65535 rip 0}${color #696969} ]
+
+${offset 60}[ ${color #FF5300}LP:${color} ${tcp_portmon 1 65535 lport 0}${color #696969} ]  ->  [ ${color #FF5300}RP:${color} ${tcp_portmon 1 65535 rport 0}${color #696969} ] ${color}
+
+${offset 60}${color #696969}[${color #FF5300} PROTOCOL: ${color}${tcp_portmon 1 65535 rservice 0}${color #696969} ]$color
+
+${color #202020}${offset 60}-----------------------------
+${color #696969}
+*${offset 54}${color #696969}[${color #FF5300} HOSTNAME: ${color}${tcp_portmon 1 65535 rhost 1}${color #696969} ]$color
+
+${offset 60}${color #696969}[${color #FF5300} REMOTE_IP: ${color}${tcp_portmon 1 65535 rip 1}${color #696969} ]
+
+${offset 60}[ ${color #FF5300}LP:${color} ${tcp_portmon 1 65535 lport 1}${color #696969} ]  ->  [ ${color #FF5300}RP:${color} ${tcp_portmon 1 65535 rport 1}${color #696969} ] ${color}
+
+${offset 60}${color #696969}[${color #FF5300} PROTOCOL: ${color}${tcp_portmon 1 65535 rservice 1}${color #696969} ]$color
+
+${color #202020}${offset 60}-----------------------------
+${color #696969}
+*${offset 54}${color #696969}[${color #FF5300} HOSTNAME: ${color}${tcp_portmon 1 65535 rhost 2}${color #696969} ]$color
+
+${offset 60}${color #696969}[${color #FF5300} REMOTE_IP: ${color}${tcp_portmon 1 65535 rip 2}${color #696969} ]
+
+${offset 60}[ ${color #FF5300}LP:${color} ${tcp_portmon 1 65535 lport 2}${color #696969} ]  ->  [ ${color #FF5300}RP:${color} ${tcp_portmon 1 65535 rport 2}${color #696969} ] ${color}
+
+${offset 60}${color #696969}[${color #FF5300} PROTOCOL: ${color}${tcp_portmon 1 65535 rservice 2}${color #696969} ]$color
+
+${color #202020}${offset 60}-----------------------------
+
+]];

@@ -1,0 +1,81 @@
+# Conky, a system monitor, based on torsmo
+#
+# Any original torsmo code is licensed under the BSD license
+#
+# All code written since the fork of torsmo is licensed under the GPL
+#
+# Please see COPYING for details
+#
+# Copyright (c) 2004, Hannu Saransaari and Lauri Hakkarainen
+# Copyright (c) 2005-2010 Brenden Matthews, Philip Kovacs, et. al. (see AUTHORS)
+# All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+alignment bottom_left
+background no
+#border_width 1
+cpu_avg_samples 2
+default_color gray
+#default_outline_color 
+#default_shade_color white
+draw_borders no
+#draw_graph_borders no
+draw_outline no
+#draw_shades yes 
+use_xft yes
+xftfont Terminus:size=8
+#xftalpha 0.8
+gap_x 2350
+gap_y 810
+minimum_size 400 200
+max_text_width 300
+maximum_width 240
+#net_avg_samples 2
+no_buffers yes
+text_buffer_size 2048
+double_buffer yes
+#out_to_console no
+#out_to_stderr no
+#extra_newline no
+own_window yes
+#own_window_transparent yes
+#own_window_argb_visual yes
+own_window_title proc-stat
+#own_window_argb_value 150
+own_window_class Conky
+own_window_type override
+own_window_hints undecorated, below, sticky, skip_taskbar, skip_pager
+#stippled_borders 0
+update_interval 3.0
+#uppercase yes
+#use_spacer none
+#show_graph_scale no
+#show_graph_range no
+
+TEXT
+${color #2E64FE}${hr 2}
+	Processes
+${color #2E64FE}${hr 2}
+${color #2E64FE}${voffset 5}NAME${goto 122}PID${goto 171}CPU%${goto 216}MEM%$color${voffset 5}
+${top name 1}${goto 115}${top pid 1}${goto 160}${top cpu 1}${goto 205}${top mem 1}
+${top name 2}${goto 115}${top pid 2}${goto 160}${top cpu 2}${goto 205}${top mem 2}
+${top name 3}${goto 115}${top pid 3}${goto 160}${top cpu 3}${goto 205}${top mem 3}
+${top name 5}${goto 115}${top pid 5}${goto 160}${top cpu 5}${goto 205}${top mem 5}
+${top name 6}${goto 115}${top pid 6}${goto 160}${top cpu 6}${goto 205}${top mem 6}
+${top name 7}${goto 115}${top pid 7}${goto 160}${top cpu 7}${goto 205}${top mem 7}
+${top name 8}${goto 115}${top pid 8}${goto 160}${top cpu 8}${goto 205}${top mem 8}
+${top name 9}${goto 115}${top pid 9}${goto 160}${top cpu 9}${goto 205}${top mem 9}
+${top name 10}${goto 115}${top pid 10}${goto 160}${top cpu 10}${goto 205}${top mem 10}
+${color #2E64FE}${hr 2}
